@@ -7,7 +7,15 @@
 import psycopg2 as db
 
 
+def createDB():
+    return db.connect(database="news")
+
+
+def mostPopularArticle():
+    conn = createDB()
+    print(conn);
+    conn.close();
 
 if __name__ == '__main__':
 
-    conn = db.connect(database="news")
+    mostPopularArticle()
