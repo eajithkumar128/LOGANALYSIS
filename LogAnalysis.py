@@ -46,6 +46,23 @@ def mostPopularAuthor():
     printData(popularAuthors);
     conn.close()
 
+def mostErroredDays():
+    conn = createDB();
+    curs = conn.cursor();
+    FetchQuery = """
+        select trim(to_char(a.loo::date,'Month'))||
+                    to_char(a.loo::date,' DD,YYYY'),
+               round(((a.count::decimal*100)/b.count::decimal),2)::text||'%'
+                from
+               errorrequest a, requestcount b where a.loo = b.loo and
+               round(((a.count::decimal*100)/b.count::decimal),2) > 1
+    """
+    curs.execute(FetchQuery)
+    ErrorPercentage = curs.fetchall()
+    printData(ErrorPercentage)
+    conn.close()
+
+
 if __name__ == '__main__':
     print("\t******************************************************************")
     print("\t*************************LOGS ANALYSIS****************************")
@@ -55,3 +72,5 @@ if __name__ == '__main__':
     mostPopularArticle()
     print("\tMOST POPULAR ARTIST:");
     mostPopularAuthor()
+    print("\tREQUEST ERRORS MORE THAN A PERCENTAGE:");
+    mostErroredDays()
