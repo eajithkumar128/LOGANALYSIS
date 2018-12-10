@@ -13,28 +13,45 @@ def createDB():
 
 def printData(data):
     for results in data:
-        print("* {} -- {} VIEWS".format(results[0],results[1]));
+        print("\t\t* {} -- {} VIEWS".format(results[0],results[1]));
+    print()
 
 
 def mostPopularArticle():
     conn = createDB()
     curs = conn.cursor();
     FetchQuery = """
-        select ar.title,count(lo.path) from articles ar, log lo
+        select ar.title,count(lo.path) as views from articles ar, log lo
                where substring(lo.path,10) = ar.slug
-               group by lo.path,ar.title
-               order by count(lo.path) desc limit 5
+               group by ar.title
+               order by views desc limit 5
     """
     curs.execute(FetchQuery);
     popularArticles = curs.fetchall();
     printData(popularArticles)
     conn.close()
 
+def mostPopularAuthor():
+    conn = createDB()
+    curs = conn.cursor();
+    FetchQuery = """
+        select au.name, count(lo.path) as views from log lo
+               join articles ar on substring(lo.path,10) = ar.slug
+               join authors au on ar.author = au.id
+               group by name
+               order by views desc
+    """
+    curs.execute(FetchQuery);
+    popularAuthors = curs.fetchall()
+    printData(popularAuthors);
+    conn.close()
+
 if __name__ == '__main__':
-    print("******************************************************************")
-    print("*************************LOGS ANALYSIS****************************")
-    print("******************************************************************")
+    print("\t******************************************************************")
+    print("\t*************************LOGS ANALYSIS****************************")
+    print("\t******************************************************************")
     print();
-    print("MOST POPULAR ARTICLES:")
+    print("\tMOST POPULAR ARTICLES:")
     mostPopularArticle()
-    print("\nMOST POPULAR ARTIST");
+    print("\tMOST POPULAR ARTIST:");
+    mostPopularAuthor()
