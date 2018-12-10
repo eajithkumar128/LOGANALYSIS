@@ -8,7 +8,11 @@ To run the program enter the following command:
 
 >`python3 LogAnalysis.py`
 
-## VIEWS CREATED
+## SUPPORTED VERISON
+
+* PYTHON3, PYTHON2
+
+## VIEWS USED
 
 Following views are created in the database to fetch the results.
 
