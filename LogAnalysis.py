@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
+
 '''
     Author: Ajithkumar
     Description: To analyse the logs from the web server and database
     and create stats
     This program include pyscopg2 module which is used to connect database
 '''
+
 
 import psycopg2 as db
 
@@ -55,10 +58,10 @@ def mostErroredDays():
     FetchQuery = """
         select trim(to_char(a.loo::date,'Month'))||
                     to_char(a.loo::date,' DD,YYYY'),
-               round(((a.count::decimal*100)/b.count::decimal),2)::text||'%'
+               round((((a.count*1.0)*100)/(b.count*1.0)),2)::text||'%'
                 from
                errorrequest a, requestcount b where a.loo = b.loo and
-               round(((a.count::decimal*100)/b.count::decimal),2) > 1
+               round((((a.count*1.0)*100)/(b.count*1.0)),2) > 1
     """
     curs.execute(FetchQuery)
     ErrorPercentage = curs.fetchall()
