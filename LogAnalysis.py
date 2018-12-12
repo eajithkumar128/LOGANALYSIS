@@ -10,6 +10,7 @@
 
 import psycopg2 as db
 
+flag = 0
 
 def createDB():
     return db.connect(database="news")
@@ -17,7 +18,10 @@ def createDB():
 
 def printData(data):
     for results in data:
-        print("\t\t* {} -- {} VIEWS".format(results[0], results[1]))
+        if flag == 1:
+            print("\t\t* {} -- {} ".format(results[0],results[1]))
+        else:
+            print("\t\t* {} -- {} VIEWS".format(results[0], results[1]))
     print()
 
 
@@ -65,7 +69,10 @@ def mostErroredDays():
     """
     curs.execute(FetchQuery)
     ErrorPercentage = curs.fetchall()
+    global flag
+    flag = 1
     printData(ErrorPercentage)
+    flag = 0
     conn.close()
 
 
